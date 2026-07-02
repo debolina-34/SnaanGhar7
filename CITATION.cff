@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this dataset or paper, please cite it as below."
+type: dataset
+title: "SnaanGhar7: A Real-World Bathroom Acoustic Event Dataset for Privacy-Preserving Assistive Living"
+version: 1.0.0
+url: "https://github.com/debolina-34/SnaanGhar7"
+repository-code: "https://github.com/debolina-34/SnaanGhar7"
+license: CC-BY-NC-4.0
+authors:
+  - family-names: Chowdhury
+    given-names: Debolina
+    email: debolinarimuchowdhury@gmail.com
+    affiliation: "NIT Durgapur"
+  - family-names: Samui
+    given-names: Suman
+    email: ssamui.ece@nitdgp.ac.in
+    affiliation: "NIT Durgapur"
+  - family-names: Saha
+    given-names: Sujoy
+    email: sujoy.ju@gmail.com
+    affiliation: "NIT Durgapur"
+keywords:
+  - bathroom acoustic event recognition
+  - environmental sound classification
+  - privacy-preserving sensing
+  - ambient assisted living
+  - TinyML

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SnaanGhar7 — Bathroom Acoustic Event Dataset</title>
+<meta name="description" content="SnaanGhar7: a real-world, multi-site bathroom acoustic event dataset for privacy-preserving ambient assisted living, healthcare monitoring, and TinyML.">
+
+<meta property="og:title" content="SnaanGhar7 — Bathroom Acoustic Event Dataset">
+<meta property="og:description" content="The first publicly available real-world multi-site bathroom acoustic event dataset for privacy-preserving assistive living.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="assets/img/prototype.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <div class="badge-row">
+      <span class="badge accent">7 classes</span>
+      <span class="badge">5 environments</span>
+      <span class="badge">21,387 windows</span>
+      <span class="badge">1.2× imbalance</span>
+      <span class="badge">99.64% accuracy</span>
+    </div>
+    <h1 class="title">SnaanGhar7</h1>
+    <p class="subtitle">A Real-World Bathroom Acoustic Event Dataset for Privacy-Preserving Assistive Living</p>
+    <p class="authors">Debolina Chowdhury¹ &nbsp;·&nbsp; Suman Samui² &nbsp;·&nbsp; Sujoy Saha¹</p>
+    <p class="affil">¹Dept. of Computer Science &amp; Engineering, NIT Durgapur &nbsp;&nbsp; ²Dept. of Electronics &amp; Communication Engineering, NIT Durgapur</p>
+    <div class="cta-row">
+      <a class="btn primary" href="../paper/SnaanGhar7_paper.pdf">📄 Read the Paper</a>
+      <a class="btn" href="https://github.com/debolina-34/SnaanGhar7">💻 GitHub Repository</a>
+      <a class="btn" href="#availability">📦 Dataset Access</a>
+      <a class="btn" href="#citation">❝ Cite</a>
+    </div>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="container">
+    <a href="#abstract">Abstract</a>
+    <a href="#classes">Classes</a>
+    <a href="#hardware">Hardware</a>
+    <a href="#statistics">Statistics</a>
+    <a href="#benchmark">Benchmark</a>
+    <a href="#edge">Edge Deployment</a>
+    <a href="#availability">Availability</a>
+    <a href="#ethics">Ethics</a>
+    <a href="#citation">Citation</a>
+  </div>
+</nav>
+
+<section id="abstract">
+  <div class="container">
+    <h2>Abstract</h2>
+    <p class="lede">
+      Acoustic sensing provides a privacy-preserving alternative to camera-based monitoring
+      for ambient assisted living, yet publicly available datasets for bathroom acoustic
+      event recognition remain scarce. To address this gap, we present <strong>SnaanGhar7</strong>,
+      the first publicly available real-world bathroom acoustic event dataset for intelligent
+      bathroom monitoring.
+    </p>
+    <p>
+      The dataset comprises seven classes — <em>Flush, Shower, Bathroom Tap, Basin Tap,
+      Door, Walker/Crutch,</em> and an <em>Unknown Class</em> — collected across five
+      real-world bathroom environments. After manual annotation and sliding-window
+      segmentation, the dataset contains 21,387 near-balanced audio samples with an
+      imbalance ratio of only 1.2×. We establish benchmark results using seven
+      representative acoustic event classification models spanning both MFCC- and
+      raw-waveform-based approaches, with the best-performing model achieving 99.64%
+      classification accuracy. By publicly releasing the dataset together with
+      standardized benchmark protocols and baseline implementations, SnaanGhar7 provides a
+      reproducible benchmark for privacy-preserving bathroom acoustic event recognition,
+      ambient assisted living, and TinyML research.
+    </p>
+
+    <figure>
+      <img src="assets/img/prototype.png" alt="Embedded recording platform: Raspberry Pi Zero 2 W with Waveshare WM8960 audio HAT, OLED display, switches, and UPS HAT" style="max-width:420px;">
+      <figcaption>Fig. 1 — Embedded recording platform used for data acquisition.</figcaption>
+    </figure>
+
+    <figure>
+      <img src="assets/img/pipeline.png" alt="Data collection, annotation, preprocessing, and benchmark generation pipeline">
+      <figcaption>Fig. 2 — SnaanGhar7 data collection, annotation, preprocessing, and benchmark generation pipeline.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="alt" id="classes">
+  <div class="container">
+    <h2>Classes</h2>
+    <p>Six target classes cover routine bathroom activity and assistive-living events; an <em>Unknown Class</em> aggregates background and non-target sounds so a deployed classifier can reject out-of-distribution input.</p>
+    <div class="class-grid">
+      <div class="class-card">
+        <h4>🚽 Flush</h4>
+        <p>Toilet flushing</p>
+        <p>Transient onset, then broadband water flow</p>
+      </div>
+      <div class="class-card">
+        <h4>🚿 Shower</h4>
+        <p>Continuous shower water flow</p>
+        <p>Sustained broadband noise, stable energy</p>
+      </div>
+      <div class="class-card">
+        <h4>🚰 Bathroom Tap</h4>
+        <p>Bathroom tap running</p>
+        <p>Continuous flow, variable intensity</p>
+      </div>
+      <div class="class-card">
+        <h4>🚰 Basin Tap</h4>
+        <p>Basin tap running</p>
+        <p>Continuous, narrow / localized flow</p>
+      </div>
+      <div class="class-card">
+        <h4>🚪 Door</h4>
+        <p>Opening / closing / knocking / latch</p>
+        <p>Impulsive onset, short duration</p>
+      </div>
+      <div class="class-card">
+        <h4>🦯 Walker/Crutch</h4>
+        <p>Mobility-aid contact sound</p>
+        <p>Repeated transient impacts, separated by silence</p>
+      </div>
+      <div class="class-card">
+        <h4>❓ Unknown Class</h4>
+        <p>Background, silence, non-target events</p>
+        <p>Low-energy or mixed background, high variability</p>
+      </div>
+    </div>
+
+    <h3>Representative waveforms &amp; mel-spectrograms</h3>
+    <div class="fig-grid">
+      <figure>
+        <img src="assets/img/waveforms.png" alt="Representative waveform examples for all seven classes">
+        <figcaption>Fig. 5 — Representative waveforms per class.</figcaption>
+      </figure>
+      <figure>
+        <img src="assets/img/melspectrograms.png" alt="Representative mel-spectrograms for all seven classes">
+        <figcaption>Fig. 6 — Representative mel-spectrograms per class.</figcaption>
+      </figure>
+    </div>
+
+    <figure>
+      <img src="assets/img/groundtruth_flush.png" alt="Ground-truth waveform, mel-spectrogram, power spectrum, zero-crossing rate, and RMS energy for a Flush example">
+      <figcaption>Full time–frequency decomposition of a representative Flush recording (waveform, mel-spectrogram, Welch power spectrum, ZCR, RMS energy).</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="hardware">
+  <div class="container">
+    <h2>Recording hardware &amp; environments</h2>
+    <p>
+      Recordings were captured with a fully embedded platform built around a
+      <strong>Raspberry Pi Zero 2 W</strong> and a <strong>Waveshare WM8960 audio HAT</strong>,
+      with an OLED status display, SD-card storage, a UPS HAT for untethered operation,
+      and four control switches (start/stop recording, run inference, shut down, reserved).
+      Capture, storage, and on-device inference all run <strong>offline</strong> — a
+      deliberate reproducibility and privacy choice.
+    </p>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Property</th><th>Value</th></tr>
+        <tr><td>Compute platform</td><td>Raspberry Pi Zero 2 W (512 MB RAM)</td></tr>
+        <tr><td>Audio front-end</td><td>Waveshare WM8960 audio HAT</td></tr>
+        <tr><td>Sampling rate</td><td>20 kHz</td></tr>
+        <tr><td>Bit depth</td><td>32-bit I2S</td></tr>
+        <tr><td>Channels</td><td>Mono</td></tr>
+        <tr><td>Automatic gain control</td><td>Disabled</td></tr>
+        <tr><td>Microphone placement</td><td>Dynamic (not fixed)</td></tr>
+        <tr><td>Same device across all sites</td><td>No</td></tr>
+      </table>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>ID</th><th>Location</th><th>Type</th></tr>
+        <tr><td>E01</td><td>NIT Durgapur (CSE / Annex 1)</td><td>Institutional</td></tr>
+        <tr><td>E02</td><td>Residential home, Howrah</td><td>Residential</td></tr>
+        <tr><td>E03</td><td>Hall-6, NIT Durgapur</td><td>Hostel</td></tr>
+        <tr><td>E04</td><td>DS-1B, NIT Durgapur</td><td>Residential</td></tr>
+        <tr><td>E05</td><td>Hall-9, NIT Durgapur</td><td>Hostel</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="statistics">
+  <div class="container">
+    <h2>Dataset statistics</h2>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="num">7</div><div class="label">Classes</div></div>
+      <div class="stat-card"><div class="num">5</div><div class="label">Environments</div></div>
+      <div class="stat-card"><div class="num">3</div><div class="label">Contributors</div></div>
+      <div class="stat-card"><div class="num">21,387</div><div class="label">Analysis windows</div></div>
+      <div class="stat-card"><div class="num">1.2×</div><div class="label">Class imbalance</div></div>
+      <div class="stat-card"><div class="num">20 kHz</div><div class="label">Sampling rate</div></div>
+      <div class="stat-card"><div class="num">1.511 s</div><div class="label">Window size</div></div>
+      <div class="stat-card"><div class="num">0.511 s</div><div class="label">Hop size</div></div>
+    </div>
+
+    <figure>
+      <img src="assets/img/class_distribution.png" alt="Class distribution of the SnaanGhar7 dataset">
+      <figcaption>Class distribution — 21,387 windows total, max imbalance ratio 1.2× (Shower 3,242 vs. Door 2,688).</figcaption>
+    </figure>
+
+    <h3>Per-class difficulty</h3>
+    <p>A composite difficulty score (aggregating inter-class overlap, intra-class spread, imbalance, silence content, and RMS variability) characterizes the corpus beyond raw counts. <em>Flush</em> is hardest (0.737) due to broadband overlap with other water events; <em>Bathroom Tap</em> (0.251) and <em>Unknown Class</em> (0.242) are easiest.</p>
+    <div class="fig-grid">
+      <figure>
+        <img src="assets/img/difficulty_ranking.png" alt="Per-class composite difficulty ranking">
+        <figcaption>Composite per-class difficulty ranking.</figcaption>
+      </figure>
+      <figure>
+        <img src="assets/img/difficulty_radar.png" alt="Per-class difficulty profile radar chart">
+        <figcaption>Difficulty profile radar (overlap, spread, imbalance, silence, RMS variability).</figcaption>
+      </figure>
+    </div>
+    <div class="fig-grid">
+      <figure>
+        <img src="assets/img/intraclass_variability.png" alt="Intra-class variability across classes">
+        <figcaption>Intra-class variability — higher indicates a harder class for the model.</figcaption>
+      </figure>
+      <figure>
+        <img src="assets/img/signal_stats.png" alt="Signal-level statistics per class">
+        <figcaption>Signal-level statistics per class (RMS energy, ZCR, silence fraction, kurtosis, dynamic range).</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section id="benchmark">
+  <div class="container">
+    <h2>Benchmark results</h2>
+    <p>
+      Seven representative acoustic event classification models were evaluated — three
+      MFCC-based (DS-CNN, CRNN, TinyCNN) and four raw-waveform models (ACLNet, DPNet,
+      ACDNet, SincNet) — trained with the Adam optimizer and categorical cross-entropy
+      loss, with waveform-level amplitude augmentation (±25%). All models exceed 93%
+      accuracy; six exceed 96%.
+    </p>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Model</th><th>Input</th><th class="num">Params</th><th class="num">Accuracy (%)</th><th class="num">Inference (ms, PC)</th></tr>
+        <tr><td>DS-CNN</td><td>MFCC</td><td class="num">81,863</td><td class="num">97.59</td><td class="num">39.52</td></tr>
+        <tr><td>CRNN</td><td>MFCC</td><td class="num">128,519</td><td class="num">98.80</td><td class="num">39.13</td></tr>
+        <tr><td>ACLNet</td><td>Raw</td><td class="num">146,240</td><td class="num">96.82</td><td class="num">61.12</td></tr>
+        <tr><td>DPNet</td><td>Raw</td><td class="num">547,537</td><td class="num">99.21</td><td class="num">63.02</td></tr>
+        <tr><td>TinyCNN</td><td>MFCC</td><td class="num">1,736,071</td><td class="num">99.63</td><td class="num">39.00</td></tr>
+        <tr><td class="best">ACDNet</td><td>Raw</td><td class="num">4,711,303</td><td class="num best">99.64</td><td class="num">66.67</td></tr>
+        <tr><td>SincNet</td><td>Raw</td><td class="num">14,149,895</td><td class="num">93.76</td><td class="num">52.00</td></tr>
+      </table>
+    </div>
+    <p><strong>ACDNet</strong> gives the best offline accuracy (99.64%); <strong>DPNet</strong> offers the best accuracy/complexity trade-off for resource-constrained edge deployment.</p>
+
+    <h3>Error analysis</h3>
+    <figure>
+      <img src="assets/img/confusion_matrix.png" alt="Per-class confusion matrix for DPNet on SnaanGhar7" style="max-width:560px;">
+      <figcaption>Fig. 7 — Per-class confusion matrix (%) for DPNet. Most errors occur between acoustically similar water-related events (Flush ↔ Bathroom Tap).</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="alt" id="edge">
+  <div class="container">
+    <h2>Edge deployment</h2>
+    <p>Trained models were converted to TensorFlow Lite and deployed on a Raspberry Pi Zero 2 W to evaluate real-time, resource-constrained performance.</p>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Data</th><th>Model</th><th class="num">Acc. (%)</th><th class="num">Size</th><th class="num">Real-time Acc. (%)</th><th class="num">TFLite (ms)</th><th class="num">End-to-end (ms)</th></tr>
+        <tr><td>Original</td><td>ACDNet</td><td class="num">97.69</td><td class="num">18.4 MB</td><td class="num">62.65</td><td class="num">15.68</td><td class="num">230.8</td></tr>
+        <tr><td>Original</td><td>ACDNet + Prep.</td><td class="num">99.39</td><td class="num">18.4 MB</td><td class="num">66.27</td><td class="num">27.38</td><td class="num">230.2</td></tr>
+        <tr><td>Original</td><td>DPNet</td><td class="num">97.52</td><td class="num">2.15 MB</td><td class="num">70.68</td><td class="num">4.45</td><td class="num">59.5</td></tr>
+        <tr><td>+Augmented</td><td>ACDNet</td><td class="num">99.39</td><td class="num">18.4 MB</td><td class="num">64.46</td><td class="num">21.17</td><td class="num">231.1</td></tr>
+        <tr><td>+Augmented</td><td>ACDNet + Prep.</td><td class="num">99.64</td><td class="num">18.4 MB</td><td class="num">80.99</td><td class="num">27.61</td><td class="num">230.0</td></tr>
+        <tr><td>+Augmented</td><td class="best">DPNet</td><td class="num">99.21</td><td class="num best">2.15 MB</td><td class="num best">89.26</td><td class="num">15.71</td><td class="num">53.5</td></tr>
+      </table>
+    </div>
+    <p>After quantization, DPNet occupies only ~2.15 MB and achieves <strong>89.26% real-time accuracy</strong> with ~15.7 ms average inference latency, supporting both high-performance offline benchmarking and resource-constrained edge deployment.</p>
+  </div>
+</section>
+
+<section id="availability">
+  <div class="container">
+    <h2>Dataset availability</h2>
+    <div class="table-wrap">
+      <table>
+        <tr><td>Repository</td><td><a href="https://github.com/debolina-34/SnaanGhar7">github.com/debolina-34/SnaanGhar7</a></td></tr>
+        <tr><td>Project page</td><td><a href="https://debolina-34.github.io/SnaanGhar7/">debolina-34.github.io/SnaanGhar7</a></td></tr>
+        <tr><td>DOI</td><td>To be assigned upon publication</td></tr>
+        <tr><td>License</td><td>CC BY-NC 4.0</td></tr>
+        <tr><td>Version</td><td>v1.0</td></tr>
+        <tr><td>Contact</td><td><a href="mailto:debolinarimuchowdhury@gmail.com">debolinarimuchowdhury@gmail.com</a></td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="ethics">
+  <div class="container">
+    <h2>Privacy &amp; ethical considerations</h2>
+    <p>
+      SnaanGhar7 relies exclusively on <strong>passive acoustic sensing</strong>, not
+      cameras, and supports only activity-level acoustic event classification — it is
+      <strong>not</strong> designed or intended for speech recognition, speaker
+      identification, user authentication, or personal attribute inference. All
+      recordings were collected with informed participant consent and permission from
+      the respective property owners. A small number of Unknown Class recordings contain
+      incidental human speech captured under realistic conditions; these are treated
+      solely as non-target events, and no personally identifiable information is
+      included in the released dataset. The dataset is released exclusively for academic
+      research in privacy-preserving acoustic sensing, ambient assisted living,
+      healthcare monitoring, and TinyML.
+    </p>
+    <h3>Limitations</h3>
+    <p>
+      SnaanGhar7 currently covers seven classes from five bathroom environments collected
+      with a single recording platform, so it does not capture the full diversity of
+      bathroom layouts, devices, or user behaviors encountered in practice. Only isolated
+      events are annotated (no overlapping/simultaneous activity labels), and — while the
+      benchmark is intentionally near-balanced for fair model comparison — real
+      deployments are typically far more imbalanced. Future releases aim to expand
+      recording environments, participants, devices, and event categories.
+    </p>
+  </div>
+</section>
+
+<section id="citation">
+  <div class="container">
+    <h2>Citation</h2>
+    <p>If you use SnaanGhar7 in your research, please cite:</p>
+    <pre><code>@inproceedings{chowdhury2026snaanghar7,
+  title     = {{SnaanGhar7}: A Real-World Bathroom Acoustic Event Dataset for
+               Privacy-Preserving Assistive Living},
+  author    = {Chowdhury, Debolina and Samui, Suman and Saha, Sujoy},
+  year      = {2026},
+  note      = {Dataset paper. Version v1.0},
+  url       = {https://github.com/debolina-34/SnaanGhar7}
+}</code></pre>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>SnaanGhar7 · NIT Durgapur · Released under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></p>
+    <p><a href="https://github.com/debolina-34/SnaanGhar7">GitHub</a> · <a href="../paper/SnaanGhar7_paper.pdf">Paper PDF</a> · <a href="mailto:debolinarimuchowdhury@gmail.com">Contact</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
