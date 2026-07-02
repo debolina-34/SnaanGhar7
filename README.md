@@ -265,9 +265,9 @@ SnaanGhar7/
 
 > **Note on the released audio/annotations:** this repository hosts the paper, project
 > site, and benchmark documentation. The raw audio recordings, per-file annotations, and
-> benchmark train/val/test splits are being packaged for release alongside the dataset
-> DOI — see [Dataset availability](#dataset-availability) below for the current status
-> and how to request early access.
+> benchmark train/val/test splits (`SnaanGhar7_dataset.zip`, ~969 MB) are hosted
+> externally on Zenodo rather than committed to git — see
+> [Dataset availability](#dataset-availability) below.
 
 ## Dataset availability
 
@@ -275,7 +275,8 @@ SnaanGhar7/
 |---|---|
 | **Repository** | https://github.com/debolina-34/SnaanGhar7 |
 | **Project page** | https://debolina-34.github.io/SnaanGhar7/ |
-| **DOI** | To be assigned upon publication |
+| **Dataset download** | <!-- TODO: replace with the Zenodo record URL once published --> To be published on Zenodo |
+| **DOI** | <!-- TODO: replace with the Zenodo DOI once published, e.g. 10.5281/zenodo.XXXXXXX --> To be assigned upon publication |
 | **License** | [CC BY-NC 4.0](LICENSE) |
 | **Version** | v1.0 |
 | **Contact** | debolinarimuchowdhury@gmail.com |

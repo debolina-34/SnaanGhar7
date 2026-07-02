@@ -4,3 +4,8 @@ Thumbs.db
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
+
+# Raw dataset archive is hosted externally on Zenodo (too large for git) -
+# see README "Dataset availability". Do not commit it here.
+SnaanGhar7_dataset.zip
+*.zip
