@@ -16,6 +16,14 @@ Debolina Chowdhury¹, Suman Samui², Sujoy Saha¹
 
 ---
 
+## 📄 Related Publication
+
+**[SincDPNet: Interpretable Raw Waveform Bathroom Activity Recognition for Assistive Living]()**
+
+This dataset paper introduces **SnaanGhar7** and proposes **SincDPNet**, an efficient neural network architecture that learns directly on raw waveforms using learnable sinc band-pass filters for interpretable frequency analysis.
+
+---
+
 ## 🔗 Accessing the Dataset
 
 To access the **SnaanGhar7** dataset, please fill out the **[Dataset Access Request Form](https://docs.google.com/forms/d/e/1FAIpQLSeG6SI1RTFGJUxEYZn49DJKLeNmeOQVrni4vGBuXhI87fPw9w/viewform?usp=dialog)**.
@@ -33,7 +41,7 @@ To access the **SnaanGhar7** dataset, please fill out the **[Dataset Access Requ
 
 Acoustic sensing offers a privacy-preserving alternative to camera-based monitoring for ambient assisted living (AAL), yet publicly available datasets for bathroom acoustic event recognition remain scarce. **SnaanGhar7** is, to our knowledge, the first publicly available real-world **multi-site bathroom acoustic event dataset**, purpose-built for intelligent, privacy-preserving bathroom monitoring.
 
-The dataset spans **seven classes** — *Flush, Shower, Bathroom Tap, Basin Tap, Door, Walker/Crutch,* and an *Unknown Class* for background/non-target sounds — recorded across **five real-world bathrooms** (residential, hostel, and institutional) by three contributors. After manual annotation and sliding-window segmentation, the released benchmark corpus contains **21,387 near-balanced audio segments** (imbalance ratio **1.2×**). Seven baseline acoustic event classification models (MFCC- and raw-waveform-based) are benchmarked, with the best model reaching **99.64%** offline accuracy and **89.26%** real-time accuracy on an embedded Raspberry Pi Zero 2 W.
+The dataset spans **seven classes** — *Flush, Shower, Bathroom Tap, Basin Tap, Door, Walker/Crutch,* and an *Unknown Class* for background/non-target sounds — recorded across **five real-world bathrooms** (residential, hostel, and institutional) by three contributors. After manual annotation and sliding-window segmentation, the released benchmark corpus contains **21,387 near-balanced audio segments** (imbalance ratio **1.2×**).
 
 <p align="center">
   <img src="docs/assets/img/prototype.png" width="380" alt="Embedded recording platform (Raspberry Pi Zero 2 W + WM8960 audio HAT)">
@@ -47,16 +55,14 @@ The dataset spans **seven classes** — *Flush, Shower, Bathroom Tap, Basin Tap,
 
 Widely used environmental sound benchmarks — ESC-50, UrbanSound8K, AudioSet, FSD50K, TAU Acoustic Scenes, DESED — contain few or no bathroom-specific recordings. Existing smart-home corpora (Health Smart Home, Sweet-Home) include only limited bathroom activity, and prior bathroom-monitoring studies rely on small proprietary datasets collected under controlled/laboratory conditions. Bathrooms are among the most safety-critical rooms in a home — especially for older adults and people with mobility impairments — which makes a public, realistic, privacy-preserving benchmark valuable for reproducible AAL and TinyML research.
 
-| Dataset | Domain | Bathroom | Public | Benchmark | Audio |
+| Dataset | Domain | Bathroom | Public | Non-target Class | Raw-waveform Baselines |
 |---|---|:---:|:---:|:---:|:---:|
-| ESC-50 | Environmental Sounds | ✗ | ✓ | ✓ | ✓ |
-| UrbanSound8K | Urban Sounds | ✗ | ✓ | ✓ | ✓ |
-| AudioSet | General Audio Events | Partial | ✓ | ✓ | ✓ |
-| FSD50K | General Audio Events | Partial | ✓ | ✓ | ✓ |
-| TAU Acoustic Scenes | Acoustic Scenes | ✗ | ✓ | ✓ | ✓ |
-| Health Smart Home | Smart Home ADLs | Limited | ✓ | Partial | ✓ |
-| Sweet-Home | Smart Home ADLs | Limited | ✓ | Partial | ✓ |
-| Bathroom Monitoring (prior studies) | Healthcare | ✓ | ✗ | ✗ | Partial |
+| ESC-50 | Environmental Sounds | ✗ | ✓ | ✗ | ✗ |
+| UrbanSound8K | Urban Sounds | ✗ | ✓ | ✗ | ✗ |
+| AudioSet | General Audio Events | Partial | ✓ | ✗ | ✗ |
+| Chen et al. | Bathroom | ✓ | ✗ | ✗ | ✗ |
+| Hyun | Water/Bathroom | ✓ | ✗ | ✗ | ✗ |
+| Öztürk et al. | Restroom | ✓ | ✓ | ✗ | ✗ |
 | **SnaanGhar7 (Ours)** | **Bathroom Events** | **✓** | **✓** | **✓** | **✓** |
 
 ## Dataset at a glance
@@ -67,10 +73,10 @@ Widely used environmental sound benchmarks — ESC-50, UrbanSound8K, AudioSet, F
 | Recording environments | 5 (Residential, Hostel, Institutional) |
 | Contributors | 3 |
 | Original annotated duration | ≈385 min (≈55 min/class) |
+| **Total annotated clips** | **21,387** |
 | Sampling rate | 20 kHz |
 | Bit depth / channels | 32-bit I2S / mono |
 | Window / hop size | 1.51125 s / 0.51125 s (30,225 / 10,225 samples) |
-| Total analysis windows | 21,387 |
 | Class imbalance ratio | 1.2× |
 | Input representation | Raw waveform (MFCC derived for MFCC-based baselines) |
 | Amplitude augmentation | ±25% waveform-level scaling |
@@ -174,6 +180,45 @@ Water-related activities (Flush, Shower, Bathroom Tap, Basin Tap) show distinct 
   <img src="docs/assets/img/melspectrograms.png" width="600" alt="Representative mel-spectrograms for all seven classes">
 </p>
 
+## SincDPNet: Interpretable Raw Waveform Model
+
+**SincDPNet** is an efficient neural network architecture specifically designed for bathroom acoustic event recognition on edge devices. Key features:
+
+### Architecture Overview
+- **Front-end:** Learnable sinc band-pass filters (each parameterized by only 2 numbers: low and high cutoff frequencies in Hz)
+- **Back-end:** Separable convolutional layers for ultra-compact design
+- **Input:** Raw waveforms (no hand-crafted features)
+- **Interpretability:** Learned filter passbands are directly interpretable in Hertz
+
+### Design Study & Configurations
+
+Multi-objective Bayesian optimization (MOBO) was used to optimize across validation macro-F1 and model size, evaluating 24 configurations. Three selected designs from the Pareto set:
+
+| Configuration | Filter Count (Nf) | Parameters | Validation Macro-F1 | Notes |
+|---|---:|---:|---:|---|
+| **Rank-1 Best (Weighted)** | 78 | 4,098 | Best balanced performance | Optimal accuracy-size trade-off |
+| **Best Validation F1** | 59 | 3,438 | Highest macro-F1 | Maximum discriminative power |
+| **Compact Rank-1** | 25 | 2,848 | 0.661 | Most compact model |
+
+### Environment-Disjoint Evaluation Results
+
+Under the environment-disjoint protocol (ensuring no acoustic leakage across train/validation/test splits):
+
+| Metric | Value |
+|---|---:|
+| **Accuracy** | 75.7% |
+| **Macro-F1** | 0.661 |
+| **Matthews Correlation Coefficient (MCC)** | 0.716 |
+| **Model Parameters** | 2,848 (compact config) |
+
+### Acoustic Overlap Analysis
+
+- Acoustic overlap between samples significantly explains class confusion patterns
+- Water-flow events (Flush, Bathroom Tap, Shower) show highest spectral overlap
+- Impulsive events (Door, Walker/Crutch) are more distinctive but occasionally confused with water events
+- The Unknown Class helps model learn rejection of out-of-distribution inputs
+- Despite high interpretability, class difficulty is not a perfect predictor of model performance
+
 ## Benchmark results
 
 Seven representative acoustic event classification models were evaluated — three MFCC-based (DS-CNN, CRNN, TinyCNN) and four raw-waveform models (ACLNet, DPNet, ACDNet, SincNet) — trained with the Adam optimizer and categorical cross-entropy loss, with waveform-level amplitude augmentation (±25%). All models exceed 93% accuracy; six exceed 96%.
@@ -251,15 +296,16 @@ SnaanGhar7 currently covers seven classes from five bathroom environments collec
 If you use SnaanGhar7 in your research, please cite:
 
 \\\ibtex
-@inproceedings{chowdhury2026snaanghar7,
-  title     = {{SnaanGhar7}: A Real-World Bathroom Acoustic Event Dataset for
-               Privacy-Preserving Assistive Living},
+@article{chowdhury2026snaanghar7,
+  title     = {{SnaanGhar7}: A Real-World Bathroom Acoustic Event Dataset for Privacy-Preserving Assistive Living},
   author    = {Chowdhury, Debolina and Samui, Suman and Saha, Sujoy},
+  journal   = {Under Review},
   year      = {2026},
-  note      = {Dataset paper. Version v1.0},
-  url       = {https://github.com/debolina-34/SnaanGhar7}
+  note      = {Dataset paper. Version v1.0}
 }
 \\\
+
+**For the SincDPNet model paper**, please refer to: *SincDPNet: Interpretable Raw Waveform Bathroom Activity Recognition for Assistive Living* (2026).
 
 See also [\CITATION.cff\](CITATION.cff).
 
